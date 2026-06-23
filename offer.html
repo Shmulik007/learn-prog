@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Offer Customizer</title>
-  <style>
+  <title>Offer Customizer — DealStudio</title>
+  <style id="theme-vars">
     :root {
       --bg: #0b0f1a;
       --surface: #111827;
@@ -13,249 +13,163 @@
       --accent: #3b82f6;
       --green: #10b981;
       --gold: #f59e0b;
-      --red: #ef4444;
       --text: #f1f5f9;
       --muted: #64748b;
       --muted2: #94a3b8;
+      --shadow: rgba(0,0,0,0.5);
     }
+  </style>
+  <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      min-height: 100vh;
-    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-height: 100vh; }
 
-    /* ── Header ── */
     header {
-      padding: 16px 24px;
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--surface);
     }
-    .logo { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; color: var(--accent); }
-    .deal-badge {
-      font-size: 12px;
-      color: var(--muted2);
+    .logo { font-size: 17px; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
+    .badge {
+      font-size: 12px; color: var(--muted2);
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 4px 12px;
     }
 
-    /* ── Layout ── */
-    main {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 32px 20px 60px;
+    main { max-width: 680px; margin: 0 auto; padding: 28px 20px 70px; }
+
+    /* ── Message banner ── */
+    #msg-banner {
+      display: none;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--muted2);
+      line-height: 1.5;
+      margin-bottom: 20px;
     }
 
-    .hero { margin-bottom: 28px; }
+    .hero { margin-bottom: 22px; }
     .hero h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-    .hero p { font-size: 14px; color: var(--muted2); }
+    .hero p  { font-size: 14px; color: var(--muted2); }
 
-    /* ── Offer summary card ── */
+    /* ── Summary card ── */
     .summary-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 24px 20px 20px;
-      margin-bottom: 20px;
+      padding: 22px 20px 18px;
+      margin-bottom: 16px;
     }
-    .summary-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .metric { text-align: center; }
-    .metric-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      margin-bottom: 5px;
-    }
+    .metric-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px; }
     .metric-value { font-size: 24px; font-weight: 700; line-height: 1; }
-    .metric-value.green  { color: var(--green); }
-    .metric-value.blue   { color: var(--accent); }
-    .metric-value.gold   { color: var(--gold); }
+    .metric-value.green { color: var(--green); }
+    .metric-value.blue  { color: var(--accent); }
+    .metric-value.gold  { color: var(--gold); }
     .metric-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
 
-    /* balance bar */
-    .balance-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
-    }
+    .balance-row { display: flex; align-items: center; gap: 10px; padding-top: 14px; border-top: 1px solid var(--border); }
     .bal-label { font-size: 11px; color: var(--muted2); white-space: nowrap; }
-    .bal-track {
-      flex: 1;
-      height: 6px;
-      background: var(--border);
-      border-radius: 3px;
-      overflow: hidden;
+    .bal-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .bal-fill  { height: 100%; border-radius: 3px; transition: width .25s ease, background .25s ease; }
+
+    /* ── Earnings pill ── */
+    .earn-pill {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: rgba(245,158,11,.08);
+      border: 1px solid rgba(245,158,11,.25);
+      border-radius: 10px;
+      padding: 10px 16px;
+      margin-bottom: 16px;
+      font-size: 13px; color: var(--gold);
     }
-    .bal-fill {
-      height: 100%;
-      border-radius: 3px;
-      transition: width 0.25s ease, background 0.25s ease;
-    }
+    .earn-pill strong { font-size: 16px; font-weight: 700; }
 
     /* ── Slider card ── */
     .slider-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 24px 20px;
+      padding: 22px 20px;
       margin-bottom: 16px;
     }
     .slider-card h2 {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      margin-bottom: 22px;
+      font-size: 10px; text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted); margin-bottom: 20px;
     }
-
-    .slider-group { margin-bottom: 24px; }
+    .slider-group { margin-bottom: 22px; }
     .slider-group:last-of-type { margin-bottom: 0; }
-
-    .sl-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 10px;
-    }
-    .sl-name { font-size: 14px; font-weight: 600; }
+    .sl-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+    .sl-name  { font-size: 14px; font-weight: 600; }
     .sl-value { font-size: 20px; font-weight: 700; }
     .sl-value.green { color: var(--green); }
     .sl-value.blue  { color: var(--accent); }
     .sl-value.gold  { color: var(--gold); }
 
-    /* range input */
     input[type=range] {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 6px;
-      border-radius: 3px;
-      background: var(--border);
-      outline: none;
-      cursor: pointer;
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 6px; border-radius: 3px;
+      background: var(--border); outline: none; cursor: pointer;
     }
     input[type=range]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      background: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-      cursor: grab;
-      transition: transform 0.15s;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #fff; box-shadow: 0 2px 8px var(--shadow);
+      cursor: grab; transition: transform .15s;
     }
     input[type=range]:active::-webkit-slider-thumb { cursor: grabbing; transform: scale(1.15); }
     input[type=range]::-moz-range-thumb {
-      width: 22px; height: 22px;
-      border-radius: 50%; border: none;
-      background: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-      cursor: grab;
+      width: 22px; height: 22px; border-radius: 50%; border: none;
+      background: #fff; box-shadow: 0 2px 8px var(--shadow); cursor: grab;
     }
-    input[type=range].track-green {
-      background: linear-gradient(to right, var(--green) var(--v,0%), var(--border) var(--v,0%));
-    }
-    input[type=range].track-blue {
-      background: linear-gradient(to right, var(--accent) var(--v,0%), var(--border) var(--v,0%));
-    }
-    input[type=range].track-gold {
-      background: linear-gradient(to right, var(--gold) var(--v,0%), var(--border) var(--v,0%));
-    }
+    .track-green { background: linear-gradient(to right, var(--green) var(--v,0%), var(--border) var(--v,0%)); }
+    .track-blue  { background: linear-gradient(to right, var(--accent) var(--v,0%), var(--border) var(--v,0%)); }
+    .track-gold  { background: linear-gradient(to right, var(--gold) var(--v,0%), var(--border) var(--v,0%)); }
 
-    .sl-hints {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 6px;
-    }
-    .sl-hint { font-size: 11px; color: var(--muted); }
+    .sl-hints { display: flex; justify-content: space-between; margin-top: 6px; }
+    .sl-hint  { font-size: 11px; color: var(--muted); }
+    .sl-divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
 
-    .sl-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+    .driver-note { font-size: 12px; color: var(--muted2); text-align: center; margin-top: 12px; min-height: 17px; }
 
-    /* driver note */
-    .driver-note {
-      font-size: 12px;
-      color: var(--muted2);
-      text-align: center;
-      margin-top: 14px;
-      min-height: 17px;
-      transition: opacity 0.2s;
-    }
-
-    /* ── Earnings pill ── */
-    .earnings-pill {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: rgba(245,158,11,0.08);
-      border: 1px solid rgba(245,158,11,0.25);
-      border-radius: 10px;
-      padding: 10px 16px;
-      margin-bottom: 16px;
-      font-size: 13px;
-      color: var(--gold);
-    }
-    .earnings-pill strong { font-size: 16px; font-weight: 700; }
-
-    /* ── Lock In button ── */
+    /* ── Lock button ── */
     .lock-btn {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      display: block; width: 100%; padding: 16px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 12px;
+      font-size: 16px; font-weight: 700; letter-spacing: .02em;
+      cursor: pointer; transition: background .2s, transform .1s;
     }
     .lock-btn:hover { background: #2563eb; }
-    .lock-btn:active { transform: scale(0.98); }
+    .lock-btn:active { transform: scale(.98); }
 
     /* ── Modal ── */
     .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.78); z-index: 200;
+      align-items: center; justify-content: center; padding: 20px;
     }
     .overlay.show { display: flex; }
     .modal {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 28px 24px;
-      max-width: 460px;
-      width: 100%;
+      border-radius: 20px; padding: 28px 24px;
+      max-width: 460px; width: 100%;
     }
     .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
     .modal-sub { font-size: 13px; color: var(--muted2); margin-bottom: 20px; }
     .modal-rows { background: var(--surface2); border-radius: 12px; padding: 4px 16px; margin-bottom: 20px; }
     .modal-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 11px 0;
-      font-size: 13px;
+      display: flex; justify-content: space-between;
+      padding: 11px 0; font-size: 13px;
       border-bottom: 1px solid var(--border);
     }
     .modal-row:last-child { border-bottom: none; }
@@ -265,29 +179,39 @@
     .modal-actions { display: flex; gap: 10px; }
     .btn-edit {
       flex: 1; padding: 12px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      font-size: 14px; font-weight: 600;
-      cursor: pointer;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text);
+      font-size: 14px; font-weight: 600; cursor: pointer;
     }
-    .btn-copy {
+    .btn-submit {
       flex: 2; padding: 12px;
-      background: var(--green);
-      border: none;
-      border-radius: 10px;
-      color: #fff;
-      font-size: 14px; font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s;
+      background: var(--green); border: none;
+      border-radius: 10px; color: #fff;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      transition: background .2s;
     }
-    .btn-copy:hover { background: #059669; }
+    .btn-submit:hover { background: #059669; }
+    .btn-submit.done  { background: var(--muted); cursor: default; }
 
-    /* responsive */
+    /* ── Success screen (after submission) ── */
+    .success-screen {
+      display: none; text-align: center; padding: 20px 0;
+    }
+    .success-screen .icon { font-size: 48px; margin-bottom: 12px; }
+    .success-screen h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; color: var(--green); }
+    .success-screen p  { font-size: 14px; color: var(--muted2); line-height: 1.6; }
+
+    /* Light theme overrides */
+    body.light {
+      --bg: #f8fafc; --surface: #ffffff; --surface2: #f1f5f9;
+      --border: #e2e8f0; --text: #0f172a; --muted: #94a3b8;
+      --muted2: #64748b; --shadow: rgba(0,0,0,0.15);
+    }
+
     @media (max-width: 480px) {
       .summary-grid { grid-template-columns: 1fr 1fr; }
       .summary-grid .metric:last-child { grid-column: span 2; }
+      .modal-actions { flex-direction: column; }
     }
   </style>
 </head>
@@ -295,17 +219,19 @@
 
 <header>
   <div class="logo">DealStudio</div>
-  <div class="deal-badge" id="badge">Deal #—</div>
+  <div class="badge" id="badge">Deal #—</div>
 </header>
 
 <main>
+  <div id="msg-banner"></div>
+
   <div class="hero">
     <h1>Customize the Offer</h1>
-    <p id="hero-sub">Slide to find the right deal for your client.</p>
+    <p id="hero-sub">Adjust the sliders to find the right deal for your client, then lock it in.</p>
   </div>
 
   <!-- Summary card -->
-  <div class="summary-card">
+  <div class="summary-card" id="balance-section">
     <div class="summary-grid">
       <div class="metric">
         <div class="metric-label">Client Receives</div>
@@ -323,7 +249,7 @@
         <div class="metric-sub" id="s-comm-dollars">~$—</div>
       </div>
     </div>
-    <div class="balance-row">
+    <div class="balance-row" id="bal-row">
       <span class="bal-label">Best for client</span>
       <div class="bal-track"><div class="bal-fill" id="bal-fill"></div></div>
       <span class="bal-label">Max for you</span>
@@ -331,7 +257,7 @@
   </div>
 
   <!-- Earnings pill -->
-  <div class="earnings-pill">
+  <div class="earn-pill" id="earn-pill">
     You earn&nbsp;<strong id="earn-dollars">$—</strong>&nbsp;on this deal
   </div>
 
@@ -339,46 +265,44 @@
   <div class="slider-card">
     <h2>Adjust the offer</h2>
 
-    <!-- Amount -->
     <div class="slider-group">
       <div class="sl-header">
         <span class="sl-name">Funding Amount</span>
         <span class="sl-value green" id="v-amt">$—</span>
       </div>
-      <input type="range" id="sl-amt" class="track-green" min="0" max="1000" value="500">
+      <input type="range" id="sl-amt" class="track-green" min="0" max="10000" value="5000">
       <div class="sl-hints">
-        <span class="sl-hint" id="h-amt-min">$—</span>
-        <span class="sl-hint" id="h-amt-max">$—</span>
+        <span class="sl-hint" id="h-amt-min"></span>
+        <span class="sl-hint" id="h-amt-max"></span>
       </div>
     </div>
 
     <hr class="sl-divider">
 
-    <!-- Term -->
     <div class="slider-group">
       <div class="sl-header">
         <span class="sl-name">Term Length</span>
         <span class="sl-value blue" id="v-term">— months</span>
       </div>
-      <input type="range" id="sl-term" class="track-blue" min="0" max="1000" value="500">
+      <input type="range" id="sl-term" class="track-blue" min="0" max="10000" value="5000">
       <div class="sl-hints">
-        <span class="sl-hint" id="h-term-min">— months</span>
-        <span class="sl-hint" id="h-term-max">— months</span>
+        <span class="sl-hint" id="h-term-min"></span>
+        <span class="sl-hint" id="h-term-max"></span>
       </div>
     </div>
 
     <hr class="sl-divider">
 
-    <!-- Commission -->
     <div class="slider-group">
       <div class="sl-header">
         <span class="sl-name">Your Commission %</span>
         <span class="sl-value gold" id="v-comm">—%</span>
       </div>
-      <input type="range" id="sl-comm" class="track-gold" min="0" max="1000" value="500">
+      <!-- Commission slider: right side = favourable for commission direction -->
+      <input type="range" id="sl-comm" class="track-gold" min="0" max="10000" value="5000">
       <div class="sl-hints">
-        <span class="sl-hint" id="h-comm-max">—% · Max commission (smaller deal)</span>
-        <span class="sl-hint" id="h-comm-min">—% · Best for client (bigger deal)</span>
+        <span class="sl-hint" id="h-comm-left"></span>
+        <span class="sl-hint" id="h-comm-right"></span>
       </div>
     </div>
 
@@ -390,253 +314,462 @@
 
 <!-- Confirmation modal -->
 <div class="overlay" id="overlay" onclick="onOverlayClick(event)">
-  <div class="modal">
-    <h2>Offer Confirmed</h2>
-    <p class="modal-sub" id="m-sub">Review and copy the final terms.</p>
-    <div class="modal-rows">
-      <div class="modal-row"><span>Client</span><span class="val" id="m-client">—</span></div>
-      <div class="modal-row"><span>Funding Amount</span><span class="val green" id="m-amt">—</span></div>
-      <div class="modal-row"><span>Term</span><span class="val" id="m-term">—</span></div>
-      <div class="modal-row"><span>Your Commission</span><span class="val gold" id="m-comm">—</span></div>
-      <div class="modal-row"><span>Your Earnings</span><span class="val gold" id="m-earn">—</span></div>
-      <div class="modal-row"><span>Deal ID</span><span class="val" id="m-did">—</span></div>
+  <div class="modal" id="modal-inner">
+
+    <!-- Review step -->
+    <div id="modal-review">
+      <h2>Review &amp; Confirm</h2>
+      <p class="modal-sub">These are the terms you're locking in.</p>
+      <div class="modal-rows">
+        <div class="modal-row"><span>Client</span><span class="val" id="m-client">—</span></div>
+        <div class="modal-row"><span>Funding Amount</span><span class="val green" id="m-amt">—</span></div>
+        <div class="modal-row"><span>Term</span><span class="val" id="m-term">—</span></div>
+        <div class="modal-row"><span>Your Commission</span><span class="val gold" id="m-comm">—</span></div>
+        <div class="modal-row"><span>Your Earnings</span><span class="val gold" id="m-earn">—</span></div>
+        <div class="modal-row"><span>Deal ID</span><span class="val" id="m-did">—</span></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-edit" onclick="closeModal()">← Edit</button>
+        <button class="btn-submit" id="submit-btn" onclick="submitOffer()">Submit Offer</button>
+      </div>
     </div>
-    <div class="modal-actions">
-      <button class="btn-edit" onclick="closeModal()">← Edit</button>
-      <button class="btn-copy" id="copy-btn" onclick="copyOffer()">Copy Offer Summary</button>
+
+    <!-- Success step -->
+    <div class="success-screen" id="modal-success">
+      <div class="icon">🔒</div>
+      <h2>Offer Submitted!</h2>
+      <p id="success-msg">Your funder has been notified with the confirmed terms.</p>
+      <div style="margin-top:18px; display:flex; gap:10px;">
+        <button class="btn-edit" style="flex:1" onclick="copyOfferText()">Copy Summary</button>
+        <button class="btn-submit" style="flex:1" id="open-email-btn">Open Email</button>
+      </div>
     </div>
+
   </div>
 </div>
 
 <script>
-// ─────────────────────────────────────────────
-// Config — read from URL params, fall back to demo values
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// CONFIG — read from URL params
+// ═══════════════════════════════════════════════════════════
 const P = new URLSearchParams(location.search);
-const get = (k, d) => P.get(k) ?? d;
+const get  = (k, d) => P.get(k) !== null ? P.get(k) : d;
+const getN = (k, d) => +(P.get(k) ?? d);
 
-const MIN_AMT   = +get('minAmt',   50000);
-const MAX_AMT   = +get('maxAmt',  500000);
-const MIN_TERM  = +get('minTerm',       3);
-const MAX_TERM  = +get('maxTerm',      24);
-// Commission slider is INVERTED: left = max commission (small deal), right = min commission (big deal)
-// So sliding right gives client MORE (more $ then more term) and REDUCES broker %
-// Sliding left = broker takes MORE % but deal shrinks
-const MIN_COMM  = +get('minComm',   3.0);   // lowest % = biggest deal for client
-const MAX_COMM  = +get('maxComm',  12.0);   // highest % = smallest deal
-const CUSTOMER  =  get('customer', 'Your Client');
-const DEAL_ID   =  get('dealId',   'DEAL-001');
+const CFG = {
+  customer:    get('customer',  'Your Client'),
+  broker:      get('broker',    ''),
+  dealId:      get('dealId',    'DEAL-001'),
+  funderEmail: get('funderEmail',''),
+  returnUrl:   get('returnUrl', ''),
+  msg:         get('msg',       ''),
 
-// Weights: amount drives commission more than term does
-const W_AMT  = 0.65;
-const W_TERM = 0.35;
+  minAmt:  getN('minAmt',   50000),
+  maxAmt:  getN('maxAmt',  500000),
+  defaultAmt: get('defaultAmt', 'mid'),
 
-// Slider range (integer ticks for smooth dragging)
-const TICKS = 1000;
+  minTerm: getN('minTerm',  3),
+  maxTerm: getN('maxTerm', 24),
+  defaultTerm: get('defaultTerm', 'mid'),
 
-// ─────────────────────────────────────────────
-// State
-// ─────────────────────────────────────────────
-// All state is in 0-1 ratios (0 = min, 1 = max)
-let rAmt  = 0.5;
+  minComm: getN('minComm',  3),
+  maxComm: getN('maxComm', 12),
+  defaultComm: get('defaultComm', 'mid'),
+
+  // Logic params
+  commDir: get('commDir', 'inverse'),       // 'inverse' | 'direct'
+  commPri: get('commPri', 'amt_first'),     // 'amt_first' | 'term_first' | 'proportional'
+  wAmt:    getN('wAmt',  0.65),
+  wTerm:   getN('wTerm', 0.35),
+  curve:   get('curve', 'linear'),          // 'linear' | 'expo' | 'log'
+  amtStep: getN('amtStep', 5000),
+  termStep:getN('termStep', 1),
+
+  showEarn: get('showEarn', '1') !== '0',
+  showBal:  get('showBal',  '1') !== '0',
+  theme:    get('theme', 'dark'),
+};
+
+const TICKS = 10000; // slider resolution
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let rAmt  = 0.5;  // 0-1 ratio
 let rTerm = 0.5;
-let activeDriver = ''; // 'amt' | 'term' | 'comm'
+let submitted = false;
 
-// ─────────────────────────────────────────────
-// Math
-// ─────────────────────────────────────────────
-// Commission DECREASES as amount and/or term increase
-// comm_ratio = 1 - (W_AMT*rAmt + W_TERM*rTerm)
-// i.e., rAmt=1, rTerm=1 → comm_ratio=0 → MIN_COMM  (biggest deal, lowest %)
-//       rAmt=0, rTerm=0 → comm_ratio=1 → MAX_COMM  (smallest deal, highest %)
+// ═══════════════════════════════════════════════════════════
+// MATH
+// ═══════════════════════════════════════════════════════════
 
-function commRatio(rA, rT) {
-  return 1 - (W_AMT * rA + W_TERM * rT);
-}
-
-function commPct(rA, rT) {
-  return MIN_COMM + commRatio(rA, rT) * (MAX_COMM - MIN_COMM);
-}
-
-// Given a target commission ratio (0=min comm/big deal, 1=max comm/small deal),
-// find the optimal (rAmt, rTerm) by:
-//   — first MAXIMISING amount (client gets as much $ as possible)
-//   — then extending term (if commission budget allows)
-// This is the "raise commission slider → amount goes up first, then term" behaviour.
-function commRatioToAmtTerm(cr) {
-  // budget available for (amount + term) after commission take
-  // cr = 1 - (W_AMT*rA + W_TERM*rT)  →  W_AMT*rA + W_TERM*rT = 1 - cr
-  const budget = Math.max(0, Math.min(1, 1 - cr));
-
-  let rA, rT;
-  if (W_AMT >= budget) {
-    // Amount alone absorbs the whole budget; term stays at min
-    rA = budget / W_AMT;
-    rT = 0;
-  } else {
-    // Amount maxes out, remainder goes to term
-    rA = 1;
-    rT = Math.min(1, (budget - W_AMT) / W_TERM);
+// Apply curve to a 0-1 ratio (the "deal size" ratio)
+function applyCurve(x) {
+  switch (CFG.curve) {
+    case 'expo': return x * x;
+    case 'log':  return Math.sqrt(x);
+    default:     return x;   // linear
   }
+}
+function invertCurve(y) {
+  switch (CFG.curve) {
+    case 'expo': return Math.sqrt(Math.max(0, y));
+    case 'log':  return y * y;
+    default:     return y;
+  }
+}
+
+// "Deal ratio" = how big the deal is, from 0 (smallest) to 1 (biggest)
+function dealRatio(rA, rT) {
+  return CFG.wAmt * rA + CFG.wTerm * rT;
+}
+
+// Commission from current (rAmt, rTerm)
+function commPct(rA, rT) {
+  const dr = dealRatio(rA, rT);
+  const curved = applyCurve(dr);
+  if (CFG.commDir === 'direct') {
+    // Bigger deal → more commission
+    return CFG.minComm + curved * (CFG.maxComm - CFG.minComm);
+  } else {
+    // Bigger deal → less commission
+    return CFG.maxComm - curved * (CFG.maxComm - CFG.minComm);
+  }
+}
+
+// Given a target commission %, find the (rAmt, rTerm) pair
+function commToAmtTerm(targetComm) {
+  // Compute needed deal ratio (inverted from commPct formula)
+  let curved;
+  if (CFG.commDir === 'direct') {
+    curved = (targetComm - CFG.minComm) / (CFG.maxComm - CFG.minComm);
+  } else {
+    curved = (CFG.maxComm - targetComm) / (CFG.maxComm - CFG.minComm);
+  }
+  curved = Math.max(0, Math.min(1, curved));
+  const budget = invertCurve(curved); // 0=small deal, 1=big deal
+
+  let rA = 0, rT = 0;
+
+  if (CFG.commPri === 'proportional') {
+    // Both scale equally (budget is shared equally)
+    rA = Math.min(1, budget);
+    rT = Math.min(1, budget);
+  } else if (CFG.commPri === 'term_first') {
+    // Term maxes out first, then amount
+    const termBudget = budget / CFG.wTerm;
+    if (termBudget <= 1) {
+      rT = termBudget;
+      rA = 0;
+    } else {
+      rT = 1;
+      rA = Math.min(1, (budget - CFG.wTerm) / CFG.wAmt);
+    }
+  } else {
+    // amt_first (default): amount maxes out first, then term
+    const amtBudget = budget / CFG.wAmt;
+    if (amtBudget <= 1) {
+      rA = amtBudget;
+      rT = 0;
+    } else {
+      rA = 1;
+      rT = Math.min(1, (budget - CFG.wAmt) / CFG.wTerm);
+    }
+  }
+
   return { rA, rT };
 }
 
-// ─────────────────────────────────────────────
-// Formatting helpers
-// ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════
 const fmtAmt  = v => '$' + Math.round(v).toLocaleString();
 const fmtComm = v => v.toFixed(1) + '%';
 
-function currentAmt()   { return MIN_AMT  + rAmt  * (MAX_AMT  - MIN_AMT); }
-function currentTerm()  { return Math.round(MIN_TERM + rTerm * (MAX_TERM - MIN_TERM)); }
-function currentComm()  { return commPct(rAmt, rTerm); }
-function currentEarn()  { return currentAmt() * (currentComm() / 100); }
+function currentAmt()  { return snapAmt(CFG.minAmt + rAmt * (CFG.maxAmt - CFG.minAmt)); }
+function currentTerm() { return snapTerm(CFG.minTerm + rTerm * (CFG.maxTerm - CFG.minTerm)); }
+function currentComm() { return commPct(rAmt, rTerm); }
+function currentEarn() { return currentAmt() * (currentComm() / 100); }
 
-// ─────────────────────────────────────────────
-// DOM refs
-// ─────────────────────────────────────────────
-const slAmt  = document.getElementById('sl-amt');
-const slTerm = document.getElementById('sl-term');
-const slComm = document.getElementById('sl-comm');
+function snapAmt(v)  { return Math.round(v / CFG.amtStep) * CFG.amtStep; }
+function snapTerm(v) { return Math.round(v / CFG.termStep) * CFG.termStep; }
 
-// ─────────────────────────────────────────────
-// Render
-// ─────────────────────────────────────────────
+function defaultRatio(key) {
+  const v = CFG[key];
+  if (v === 'min') return 0;
+  if (v === 'max') return 1;
+  return 0.5;
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════
 function render() {
-  const amt   = currentAmt();
-  const term  = currentTerm();
-  const comm  = currentComm();
-  const earn  = currentEarn();
+  const amt  = currentAmt();
+  const term = currentTerm();
+  const comm = currentComm();
+  const earn = currentEarn();
 
-  // Summary card
-  document.getElementById('s-amt').textContent    = fmtAmt(amt);
-  document.getElementById('s-term').textContent   = term + ' mo';
-  document.getElementById('s-comm').textContent   = fmtComm(comm);
-  document.getElementById('s-comm-dollars').textContent = '~' + fmtAmt(earn);
+  const amtStr  = fmtAmt(amt);
+  const termStr = term + ' mo';
+  const commStr = fmtComm(comm);
+  const earnStr = '~' + fmtAmt(earn);
 
-  // Earnings pill
-  document.getElementById('earn-dollars').textContent = fmtAmt(earn);
+  // Summary
+  el('s-amt').textContent  = amtStr;
+  el('s-term').textContent = termStr;
+  el('s-comm').textContent = commStr;
+  el('s-comm-dollars').textContent = earnStr;
+  el('earn-dollars').textContent = fmtAmt(earn);
 
-  // Slider value labels
-  document.getElementById('v-amt').textContent   = fmtAmt(amt);
-  document.getElementById('v-term').textContent  = term + ' months';
-  document.getElementById('v-comm').textContent  = fmtComm(comm);
+  // Slider labels
+  el('v-amt').textContent  = amtStr;
+  el('v-term').textContent = term + ' months';
+  el('v-comm').textContent = commStr;
 
-  // Sync slider positions (0-TICKS)
-  setSlider(slAmt,  rAmt,  'track-green');
-  setSlider(slTerm, rTerm, 'track-blue');
-  // Commission slider is INVERTED: left=high%, right=low%
-  // slider position = 1 - commRatio (so right = low commission = big deal)
-  const commSliderR = 1 - commRatio(rAmt, rTerm);
-  setSlider(slComm, commSliderR, 'track-gold');
+  // Sync slider positions
+  setSlider(el('sl-amt'),  rAmt,  'track-green');
+  setSlider(el('sl-term'), rTerm, 'track-blue');
 
-  // Balance bar: left=best for client (low comm), right=max for broker (high comm)
-  // Fill represents how much goes to CLIENT (inverse of commission ratio)
-  const clientShare = 1 - commRatio(rAmt, rTerm); // 0=all to broker, 1=all to client
-  const fill = document.getElementById('bal-fill');
-  const hue  = lerp(0, 142, clientShare); // red→green
-  fill.style.width      = (clientShare * 100).toFixed(1) + '%';
-  fill.style.background = `hsl(${hue}, 72%, 50%)`;
+  // Commission slider position — direction depends on commDir:
+  // For 'inverse': right = low commission = big deal → slider right = more for client
+  // For 'direct':  right = high commission = big deal → same direction
+  // In both cases we want: slider right = bigger deal.
+  // For inverse: commDir→inverse, slider position = 1 - commRatio
+  // For direct:  slider position = commRatio
+  const dr = dealRatio(rAmt, rTerm);
+  const commSliderPos = applyCurve(dr); // 0=small deal/right-inverse, 1=big deal
+  // We normalize: right=big deal in both directions
+  setSlider(el('sl-comm'), commSliderPos, 'track-gold');
+
+  // Balance bar
+  const fill = el('bal-fill');
+  const pct = (dr * 100).toFixed(1);
+  fill.style.width = pct + '%';
+  fill.style.background = `hsl(${Math.round(dr * 142)}, 72%, 50%)`;
 
   // Modal
-  document.getElementById('m-amt').textContent  = fmtAmt(amt);
-  document.getElementById('m-term').textContent = term + ' months';
-  document.getElementById('m-comm').textContent = fmtComm(comm);
-  document.getElementById('m-earn').textContent = '~' + fmtAmt(earn);
+  el('m-client').textContent = CFG.customer;
+  el('m-amt').textContent    = amtStr;
+  el('m-term').textContent   = term + ' months';
+  el('m-comm').textContent   = commStr;
+  el('m-earn').textContent   = earnStr;
+  el('m-did').textContent    = CFG.dealId;
 }
 
-function setSlider(el, ratio, cls) {
-  el.value = Math.round(ratio * TICKS);
-  const pct = (ratio * 100).toFixed(1) + '%';
-  el.style.setProperty('--v', pct);
+function setSlider(input, ratio, cls) {
+  input.value = Math.round(ratio * TICKS);
+  input.style.setProperty('--v', (ratio * 100).toFixed(2) + '%');
 }
 
-const lerp = (a, b, t) => a + (b - a) * t;
+function el(id) { return document.getElementById(id); }
 
-// ─────────────────────────────────────────────
-// Slider events
-// ─────────────────────────────────────────────
-slAmt.addEventListener('input', () => {
-  rAmt = slAmt.value / TICKS;
-  activeDriver = 'amt';
-  setNote('Giving client more funding — your commission % adjusts down, but total earnings may rise on the bigger deal.');
+// ═══════════════════════════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════════════════════════
+el('sl-amt').addEventListener('input', function() {
+  rAmt = this.value / TICKS;
+  setNote(CFG.commDir === 'inverse'
+    ? 'More funding for client — your commission % adjusts down. Total earnings may still rise on the bigger deal.'
+    : 'More funding for client — your commission % rises with the deal size.');
   render();
 });
 
-slTerm.addEventListener('input', () => {
-  rTerm = slTerm.value / TICKS;
-  activeDriver = 'term';
-  setNote('Longer term — your commission % decreases but you\'re offering the client a more manageable repayment.');
+el('sl-term').addEventListener('input', function() {
+  rTerm = this.value / TICKS;
+  setNote(CFG.commDir === 'inverse'
+    ? 'Longer term — commission % comes down. You\'re offering the client more breathing room.'
+    : 'Longer term — commission % increases to reflect the extended deal.');
   render();
 });
 
-slComm.addEventListener('input', () => {
-  // Commission slider: right = big deal (low comm%), left = small deal (high comm%)
-  const sliderR = slComm.value / TICKS;        // 0=left(high%), 1=right(low%)
-  const cr = 1 - sliderR;                       // commission ratio: 0=low%, 1=high%
-  const { rA, rT } = commRatioToAmtTerm(cr);
+el('sl-comm').addEventListener('input', function() {
+  // Slider right = big deal (high client benefit)
+  const curvedDeal = this.value / TICKS;
+  const budget = invertCurve(curvedDeal);
+
+  let targetComm;
+  if (CFG.commDir === 'direct') {
+    targetComm = CFG.minComm + curvedDeal * (CFG.maxComm - CFG.minComm);
+  } else {
+    targetComm = CFG.maxComm - curvedDeal * (CFG.maxComm - CFG.minComm);
+  }
+
+  const { rA, rT } = commToAmtTerm(targetComm);
   rAmt  = rA;
   rTerm = rT;
-  activeDriver = 'comm';
+
+  const priLabel = { amt_first: 'amount first', term_first: 'term first', proportional: 'both proportionally' }[CFG.commPri];
   if (rAmt < 0.999) {
-    setNote('Raising commission — amount increases first to match. Slide further right to also extend the term.');
+    setNote(`Commission adjusted — funding amount is increasing (${priLabel}). Keep sliding for more term too.`);
   } else {
-    setNote('Amount maxed out — now extending the term to match your commission target.');
+    setNote('Funding maxed out — term is now extending to match the commission level.');
   }
   render();
 });
 
-function setNote(t) {
-  document.getElementById('driver-note').textContent = t;
+function setNote(t) { el('driver-note').textContent = t; }
+
+// ═══════════════════════════════════════════════════════════
+// MODAL + SUBMISSION
+// ═══════════════════════════════════════════════════════════
+function openModal() {
+  el('overlay').classList.add('show');
+  el('modal-review').style.display = '';
+  el('modal-success').style.display = 'none';
+}
+function closeModal() { el('overlay').classList.remove('show'); }
+function onOverlayClick(e) { if (e.target === el('overlay')) closeModal(); }
+
+function submitOffer() {
+  if (submitted) return;
+  submitted = true;
+
+  const response = {
+    customer:    CFG.customer,
+    broker:      CFG.broker,
+    dealId:      CFG.dealId,
+    amount:      currentAmt(),
+    term:        currentTerm(),
+    commPct:     currentComm().toFixed(2),
+    commDollars: currentEarn().toFixed(0),
+    lockedAt:    new Date().toISOString(),
+  };
+
+  const encoded = btoa(JSON.stringify(response));
+
+  // Show success screen
+  el('modal-review').style.display  = 'none';
+  el('modal-success').style.display = '';
+
+  // Build email
+  const emailBody = buildEmailBody(response);
+  const mailtoUrl = CFG.funderEmail
+    ? `mailto:${CFG.funderEmail}?subject=${encodeURIComponent('Offer Locked In — ' + CFG.customer + ' (' + CFG.dealId + ')')}&body=${encodeURIComponent(emailBody)}`
+    : null;
+
+  el('open-email-btn').onclick = () => {
+    if (mailtoUrl) window.open(mailtoUrl);
+    else {
+      navigator.clipboard.writeText(emailBody).then(() => {
+        el('open-email-btn').textContent = 'Copied!';
+      });
+    }
+  };
+
+  if (!CFG.funderEmail) {
+    el('open-email-btn').textContent = 'Copy Email Text';
+    el('success-msg').textContent = 'Copy the summary and share it with your funder.';
+  } else {
+    el('success-msg').textContent = `Your funder (${CFG.funderEmail}) will see these terms. Use the button below to send the email.`;
+  }
+
+  // Auto-open email
+  if (mailtoUrl) {
+    setTimeout(() => window.open(mailtoUrl), 500);
+  }
+
+  // Redirect to returnUrl with encoded response (so funder's admin page sees it)
+  if (CFG.returnUrl) {
+    setTimeout(() => {
+      const dest = decodeURIComponent(CFG.returnUrl) + '?response=' + encodeURIComponent(encoded);
+      // Open in new tab so broker still sees success screen
+      window.open(dest, '_blank');
+    }, 800);
+  }
 }
 
-// ─────────────────────────────────────────────
-// Modal
-// ─────────────────────────────────────────────
-function openModal() {
-  document.getElementById('m-client').textContent = CUSTOMER;
-  document.getElementById('m-did').textContent    = DEAL_ID;
-  document.getElementById('overlay').classList.add('show');
+function buildEmailBody(r) {
+  return [
+    `Hi,`,
+    ``,
+    `The following offer has been locked in for ${r.customer}.`,
+    ``,
+    `  Deal ID:         ${r.dealId}`,
+    `  Client:          ${r.customer}`,
+    `  Funding Amount:  $${Math.round(r.amount).toLocaleString()}`,
+    `  Term:            ${r.term} months`,
+    `  Commission:      ${(+r.commPct).toFixed(1)}% (~$${Math.round(r.commDollars).toLocaleString()})`,
+    `  Locked at:       ${new Date(r.lockedAt).toLocaleString()}`,
+    ``,
+    `— DealStudio`,
+  ].join('\n');
 }
-function closeModal() {
-  document.getElementById('overlay').classList.remove('show');
-}
-function onOverlayClick(e) {
-  if (e.target === document.getElementById('overlay')) closeModal();
-}
-function copyOffer() {
-  const lines = [
-    'OFFER SUMMARY',
-    '─────────────────────',
-    'Client:      ' + CUSTOMER,
-    'Deal ID:     ' + DEAL_ID,
-    'Funding:     ' + fmtAmt(currentAmt()),
-    'Term:        ' + currentTerm() + ' months',
-    'Commission:  ' + fmtComm(currentComm()) + '  (~' + fmtAmt(currentEarn()) + ')',
-    '─────────────────────',
-  ];
-  navigator.clipboard.writeText(lines.join('\n')).then(() => {
-    const btn = document.getElementById('copy-btn');
-    btn.textContent = '✓ Copied!';
-    setTimeout(() => { btn.textContent = 'Copy Offer Summary'; }, 2500);
+
+function copyOfferText() {
+  const r = {
+    customer: CFG.customer, dealId: CFG.dealId,
+    amount: currentAmt(), term: currentTerm(),
+    commPct: currentComm().toFixed(2), commDollars: currentEarn().toFixed(0),
+    lockedAt: new Date().toISOString(),
+  };
+  navigator.clipboard.writeText(buildEmailBody(r)).then(() => {
+    const btn = event.target;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy Summary', 2500);
   });
 }
 
-// ─────────────────────────────────────────────
-// Init
-// ─────────────────────────────────────────────
-document.getElementById('badge').textContent       = 'Deal #' + DEAL_ID;
-document.getElementById('hero-sub').textContent    = 'Pre-approved for ' + CUSTOMER + '. Slide to find the right fit.';
-document.getElementById('m-client').textContent    = CUSTOMER;
-document.getElementById('m-did').textContent       = DEAL_ID;
-document.getElementById('h-amt-min').textContent   = fmtAmt(MIN_AMT);
-document.getElementById('h-amt-max').textContent   = fmtAmt(MAX_AMT);
-document.getElementById('h-term-min').textContent  = MIN_TERM + ' months';
-document.getElementById('h-term-max').textContent  = MAX_TERM + ' months';
-document.getElementById('h-comm-max').textContent  = fmtComm(MAX_COMM) + ' · Max commission (smaller deal)';
-document.getElementById('h-comm-min').textContent  = fmtComm(MIN_COMM) + ' · Best for client (bigger deal)';
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+function init() {
+  // Theme
+  if (CFG.theme === 'light') document.body.classList.add('light');
 
-render();
+  // Display options
+  el('earn-pill').style.display    = CFG.showEarn ? '' : 'none';
+  el('s-comm-dollars').style.display = CFG.showEarn ? '' : 'none';
+  el('bal-row').style.display      = CFG.showBal  ? '' : 'none';
+
+  // Message banner
+  if (CFG.msg) {
+    const banner = el('msg-banner');
+    banner.textContent = decodeURIComponent(CFG.msg);
+    banner.style.display = '';
+  }
+
+  // Hero
+  el('badge').textContent    = 'Deal #' + CFG.dealId;
+  el('hero-sub').textContent = 'Pre-approved for ' + CFG.customer + '. Adjust the sliders and lock in the offer when ready.';
+  el('m-client').textContent = CFG.customer;
+  el('m-did').textContent    = CFG.dealId;
+
+  // Slider hints
+  el('h-amt-min').textContent  = fmtAmt(CFG.minAmt);
+  el('h-amt-max').textContent  = fmtAmt(CFG.maxAmt);
+  el('h-term-min').textContent = CFG.minTerm + ' months';
+  el('h-term-max').textContent = CFG.maxTerm + ' months';
+
+  // Commission slider hints depend on direction
+  // Slider: left = small deal, right = big deal (always)
+  if (CFG.commDir === 'inverse') {
+    // left = small deal = high commission, right = big deal = low commission
+    el('h-comm-left').textContent  = fmtComm(CFG.maxComm) + ' (max commission, smaller deal)';
+    el('h-comm-right').textContent = fmtComm(CFG.minComm) + ' (best for client, bigger deal)';
+  } else {
+    // left = small deal = low commission, right = big deal = high commission
+    el('h-comm-left').textContent  = fmtComm(CFG.minComm) + ' (min commission, smaller deal)';
+    el('h-comm-right').textContent = fmtComm(CFG.maxComm) + ' (max commission, bigger deal)';
+  }
+
+  // Starting ratios
+  rAmt  = defaultRatio('defaultAmt');
+  rTerm = defaultRatio('defaultTerm');
+
+  // Adjust starting commission via defaultComm
+  const dc = CFG.defaultComm;
+  if (dc !== 'mid') {
+    const targetComm = dc === 'min' ? CFG.minComm : CFG.maxComm;
+    const { rA, rT } = commToAmtTerm(targetComm);
+    rAmt  = rA;
+    rTerm = rT;
+  }
+
+  render();
+}
+
+init();
 </script>
 </body>
 </html>
