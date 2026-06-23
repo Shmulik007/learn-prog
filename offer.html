@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offer Customizer</title>
+  <style>
+    :root {
+      --bg: #0b0f1a;
+      --surface: #111827;
+      --surface2: #1a2235;
+      --border: #1e2d45;
+      --accent: #3b82f6;
+      --green: #10b981;
+      --gold: #f59e0b;
+      --red: #ef4444;
+      --text: #f1f5f9;
+      --muted: #64748b;
+      --muted2: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+    }
+    .logo { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; color: var(--accent); }
+    .deal-badge {
+      font-size: 12px;
+      color: var(--muted2);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+    }
+
+    /* ── Layout ── */
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+    }
+
+    .hero { margin-bottom: 28px; }
+    .hero h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .hero p { font-size: 14px; color: var(--muted2); }
+
+    /* ── Offer summary card ── */
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 20px 20px;
+      margin-bottom: 20px;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .metric { text-align: center; }
+    .metric-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+    .metric-value { font-size: 24px; font-weight: 700; line-height: 1; }
+    .metric-value.green  { color: var(--green); }
+    .metric-value.blue   { color: var(--accent); }
+    .metric-value.gold   { color: var(--gold); }
+    .metric-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+    /* balance bar */
+    .balance-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .bal-label { font-size: 11px; color: var(--muted2); white-space: nowrap; }
+    .bal-track {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .bal-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.25s ease, background 0.25s ease;
+    }
+
+    /* ── Slider card ── */
+    .slider-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 20px;
+      margin-bottom: 16px;
+    }
+    .slider-card h2 {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    .slider-group { margin-bottom: 24px; }
+    .slider-group:last-of-type { margin-bottom: 0; }
+
+    .sl-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .sl-name { font-size: 14px; font-weight: 600; }
+    .sl-value { font-size: 20px; font-weight: 700; }
+    .sl-value.green { color: var(--green); }
+    .sl-value.blue  { color: var(--accent); }
+    .sl-value.gold  { color: var(--gold); }
+
+    /* range input */
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      cursor: grab;
+      transition: transform 0.15s;
+    }
+    input[type=range]:active::-webkit-slider-thumb { cursor: grabbing; transform: scale(1.15); }
+    input[type=range]::-moz-range-thumb {
+      width: 22px; height: 22px;
+      border-radius: 50%; border: none;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      cursor: grab;
+    }
+    input[type=range].track-green {
+      background: linear-gradient(to right, var(--green) var(--v,0%), var(--border) var(--v,0%));
+    }
+    input[type=range].track-blue {
+      background: linear-gradient(to right, var(--accent) var(--v,0%), var(--border) var(--v,0%));
+    }
+    input[type=range].track-gold {
+      background: linear-gradient(to right, var(--gold) var(--v,0%), var(--border) var(--v,0%));
+    }
+
+    .sl-hints {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+    .sl-hint { font-size: 11px; color: var(--muted); }
+
+    .sl-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+    /* driver note */
+    .driver-note {
+      font-size: 12px;
+      color: var(--muted2);
+      text-align: center;
+      margin-top: 14px;
+      min-height: 17px;
+      transition: opacity 0.2s;
+    }
+
+    /* ── Earnings pill ── */
+    .earnings-pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 10px;
+      padding: 10px 16px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: var(--gold);
+    }
+    .earnings-pill strong { font-size: 16px; font-weight: 700; }
+
+    /* ── Lock In button ── */
+    .lock-btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .lock-btn:hover { background: #2563eb; }
+    .lock-btn:active { transform: scale(0.98); }
+
+    /* ── Modal ── */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .overlay.show { display: flex; }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px;
+      max-width: 460px;
+      width: 100%;
+    }
+    .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .modal-sub { font-size: 13px; color: var(--muted2); margin-bottom: 20px; }
+    .modal-rows { background: var(--surface2); border-radius: 12px; padding: 4px 16px; margin-bottom: 20px; }
+    .modal-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 11px 0;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-row:last-child { border-bottom: none; }
+    .modal-row .val { font-weight: 700; }
+    .modal-row .val.green { color: var(--green); }
+    .modal-row .val.gold  { color: var(--gold); }
+    .modal-actions { display: flex; gap: 10px; }
+    .btn-edit {
+      flex: 1; padding: 12px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px; font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-copy {
+      flex: 2; padding: 12px;
+      background: var(--green);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 14px; font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-copy:hover { background: #059669; }
+
+    /* responsive */
+    @media (max-width: 480px) {
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+      .summary-grid .metric:last-child { grid-column: span 2; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">DealStudio</div>
+  <div class="deal-badge" id="badge">Deal #—</div>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>Customize the Offer</h1>
+    <p id="hero-sub">Slide to find the right deal for your client.</p>
+  </div>
+
+  <!-- Summary card -->
+  <div class="summary-card">
+    <div class="summary-grid">
+      <div class="metric">
+        <div class="metric-label">Client Receives</div>
+        <div class="metric-value green" id="s-amt">$—</div>
+        <div class="metric-sub">Funding amount</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Term</div>
+        <div class="metric-value blue" id="s-term">— mo</div>
+        <div class="metric-sub">Repayment period</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Your Commission</div>
+        <div class="metric-value gold" id="s-comm">—%</div>
+        <div class="metric-sub" id="s-comm-dollars">~$—</div>
+      </div>
+    </div>
+    <div class="balance-row">
+      <span class="bal-label">Best for client</span>
+      <div class="bal-track"><div class="bal-fill" id="bal-fill"></div></div>
+      <span class="bal-label">Max for you</span>
+    </div>
+  </div>
+
+  <!-- Earnings pill -->
+  <div class="earnings-pill">
+    You earn&nbsp;<strong id="earn-dollars">$—</strong>&nbsp;on this deal
+  </div>
+
+  <!-- Sliders -->
+  <div class="slider-card">
+    <h2>Adjust the offer</h2>
+
+    <!-- Amount -->
+    <div class="slider-group">
+      <div class="sl-header">
+        <span class="sl-name">Funding Amount</span>
+        <span class="sl-value green" id="v-amt">$—</span>
+      </div>
+      <input type="range" id="sl-amt" class="track-green" min="0" max="1000" value="500">
+      <div class="sl-hints">
+        <span class="sl-hint" id="h-amt-min">$—</span>
+        <span class="sl-hint" id="h-amt-max">$—</span>
+      </div>
+    </div>
+
+    <hr class="sl-divider">
+
+    <!-- Term -->
+    <div class="slider-group">
+      <div class="sl-header">
+        <span class="sl-name">Term Length</span>
+        <span class="sl-value blue" id="v-term">— months</span>
+      </div>
+      <input type="range" id="sl-term" class="track-blue" min="0" max="1000" value="500">
+      <div class="sl-hints">
+        <span class="sl-hint" id="h-term-min">— months</span>
+        <span class="sl-hint" id="h-term-max">— months</span>
+      </div>
+    </div>
+
+    <hr class="sl-divider">
+
+    <!-- Commission -->
+    <div class="slider-group">
+      <div class="sl-header">
+        <span class="sl-name">Your Commission %</span>
+        <span class="sl-value gold" id="v-comm">—%</span>
+      </div>
+      <input type="range" id="sl-comm" class="track-gold" min="0" max="1000" value="500">
+      <div class="sl-hints">
+        <span class="sl-hint" id="h-comm-max">—% · Max commission (smaller deal)</span>
+        <span class="sl-hint" id="h-comm-min">—% · Best for client (bigger deal)</span>
+      </div>
+    </div>
+
+    <div class="driver-note" id="driver-note"></div>
+  </div>
+
+  <button class="lock-btn" onclick="openModal()">Lock In This Offer →</button>
+</main>
+
+<!-- Confirmation modal -->
+<div class="overlay" id="overlay" onclick="onOverlayClick(event)">
+  <div class="modal">
+    <h2>Offer Confirmed</h2>
+    <p class="modal-sub" id="m-sub">Review and copy the final terms.</p>
+    <div class="modal-rows">
+      <div class="modal-row"><span>Client</span><span class="val" id="m-client">—</span></div>
+      <div class="modal-row"><span>Funding Amount</span><span class="val green" id="m-amt">—</span></div>
+      <div class="modal-row"><span>Term</span><span class="val" id="m-term">—</span></div>
+      <div class="modal-row"><span>Your Commission</span><span class="val gold" id="m-comm">—</span></div>
+      <div class="modal-row"><span>Your Earnings</span><span class="val gold" id="m-earn">—</span></div>
+      <div class="modal-row"><span>Deal ID</span><span class="val" id="m-did">—</span></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-edit" onclick="closeModal()">← Edit</button>
+      <button class="btn-copy" id="copy-btn" onclick="copyOffer()">Copy Offer Summary</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// Config — read from URL params, fall back to demo values
+// ─────────────────────────────────────────────
+const P = new URLSearchParams(location.search);
+const get = (k, d) => P.get(k) ?? d;
+
+const MIN_AMT   = +get('minAmt',   50000);
+const MAX_AMT   = +get('maxAmt',  500000);
+const MIN_TERM  = +get('minTerm',       3);
+const MAX_TERM  = +get('maxTerm',      24);
+// Commission slider is INVERTED: left = max commission (small deal), right = min commission (big deal)
+// So sliding right gives client MORE (more $ then more term) and REDUCES broker %
+// Sliding left = broker takes MORE % but deal shrinks
+const MIN_COMM  = +get('minComm',   3.0);   // lowest % = biggest deal for client
+const MAX_COMM  = +get('maxComm',  12.0);   // highest % = smallest deal
+const CUSTOMER  =  get('customer', 'Your Client');
+const DEAL_ID   =  get('dealId',   'DEAL-001');
+
+// Weights: amount drives commission more than term does
+const W_AMT  = 0.65;
+const W_TERM = 0.35;
+
+// Slider range (integer ticks for smooth dragging)
+const TICKS = 1000;
+
+// ─────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────
+// All state is in 0-1 ratios (0 = min, 1 = max)
+let rAmt  = 0.5;
+let rTerm = 0.5;
+let activeDriver = ''; // 'amt' | 'term' | 'comm'
+
+// ─────────────────────────────────────────────
+// Math
+// ─────────────────────────────────────────────
+// Commission DECREASES as amount and/or term increase
+// comm_ratio = 1 - (W_AMT*rAmt + W_TERM*rTerm)
+// i.e., rAmt=1, rTerm=1 → comm_ratio=0 → MIN_COMM  (biggest deal, lowest %)
+//       rAmt=0, rTerm=0 → comm_ratio=1 → MAX_COMM  (smallest deal, highest %)
+
+function commRatio(rA, rT) {
+  return 1 - (W_AMT * rA + W_TERM * rT);
+}
+
+function commPct(rA, rT) {
+  return MIN_COMM + commRatio(rA, rT) * (MAX_COMM - MIN_COMM);
+}
+
+// Given a target commission ratio (0=min comm/big deal, 1=max comm/small deal),
+// find the optimal (rAmt, rTerm) by:
+//   — first MAXIMISING amount (client gets as much $ as possible)
+//   — then extending term (if commission budget allows)
+// This is the "raise commission slider → amount goes up first, then term" behaviour.
+function commRatioToAmtTerm(cr) {
+  // budget available for (amount + term) after commission take
+  // cr = 1 - (W_AMT*rA + W_TERM*rT)  →  W_AMT*rA + W_TERM*rT = 1 - cr
+  const budget = Math.max(0, Math.min(1, 1 - cr));
+
+  let rA, rT;
+  if (W_AMT >= budget) {
+    // Amount alone absorbs the whole budget; term stays at min
+    rA = budget / W_AMT;
+    rT = 0;
+  } else {
+    // Amount maxes out, remainder goes to term
+    rA = 1;
+    rT = Math.min(1, (budget - W_AMT) / W_TERM);
+  }
+  return { rA, rT };
+}
+
+// ─────────────────────────────────────────────
+// Formatting helpers
+// ─────────────────────────────────────────────
+const fmtAmt  = v => '$' + Math.round(v).toLocaleString();
+const fmtComm = v => v.toFixed(1) + '%';
+
+function currentAmt()   { return MIN_AMT  + rAmt  * (MAX_AMT  - MIN_AMT); }
+function currentTerm()  { return Math.round(MIN_TERM + rTerm * (MAX_TERM - MIN_TERM)); }
+function currentComm()  { return commPct(rAmt, rTerm); }
+function currentEarn()  { return currentAmt() * (currentComm() / 100); }
+
+// ─────────────────────────────────────────────
+// DOM refs
+// ─────────────────────────────────────────────
+const slAmt  = document.getElementById('sl-amt');
+const slTerm = document.getElementById('sl-term');
+const slComm = document.getElementById('sl-comm');
+
+// ─────────────────────────────────────────────
+// Render
+// ─────────────────────────────────────────────
+function render() {
+  const amt   = currentAmt();
+  const term  = currentTerm();
+  const comm  = currentComm();
+  const earn  = currentEarn();
+
+  // Summary card
+  document.getElementById('s-amt').textContent    = fmtAmt(amt);
+  document.getElementById('s-term').textContent   = term + ' mo';
+  document.getElementById('s-comm').textContent   = fmtComm(comm);
+  document.getElementById('s-comm-dollars').textContent = '~' + fmtAmt(earn);
+
+  // Earnings pill
+  document.getElementById('earn-dollars').textContent = fmtAmt(earn);
+
+  // Slider value labels
+  document.getElementById('v-amt').textContent   = fmtAmt(amt);
+  document.getElementById('v-term').textContent  = term + ' months';
+  document.getElementById('v-comm').textContent  = fmtComm(comm);
+
+  // Sync slider positions (0-TICKS)
+  setSlider(slAmt,  rAmt,  'track-green');
+  setSlider(slTerm, rTerm, 'track-blue');
+  // Commission slider is INVERTED: left=high%, right=low%
+  // slider position = 1 - commRatio (so right = low commission = big deal)
+  const commSliderR = 1 - commRatio(rAmt, rTerm);
+  setSlider(slComm, commSliderR, 'track-gold');
+
+  // Balance bar: left=best for client (low comm), right=max for broker (high comm)
+  // Fill represents how much goes to CLIENT (inverse of commission ratio)
+  const clientShare = 1 - commRatio(rAmt, rTerm); // 0=all to broker, 1=all to client
+  const fill = document.getElementById('bal-fill');
+  const hue  = lerp(0, 142, clientShare); // red→green
+  fill.style.width      = (clientShare * 100).toFixed(1) + '%';
+  fill.style.background = `hsl(${hue}, 72%, 50%)`;
+
+  // Modal
+  document.getElementById('m-amt').textContent  = fmtAmt(amt);
+  document.getElementById('m-term').textContent = term + ' months';
+  document.getElementById('m-comm').textContent = fmtComm(comm);
+  document.getElementById('m-earn').textContent = '~' + fmtAmt(earn);
+}
+
+function setSlider(el, ratio, cls) {
+  el.value = Math.round(ratio * TICKS);
+  const pct = (ratio * 100).toFixed(1) + '%';
+  el.style.setProperty('--v', pct);
+}
+
+const lerp = (a, b, t) => a + (b - a) * t;
+
+// ─────────────────────────────────────────────
+// Slider events
+// ─────────────────────────────────────────────
+slAmt.addEventListener('input', () => {
+  rAmt = slAmt.value / TICKS;
+  activeDriver = 'amt';
+  setNote('Giving client more funding — your commission % adjusts down, but total earnings may rise on the bigger deal.');
+  render();
+});
+
+slTerm.addEventListener('input', () => {
+  rTerm = slTerm.value / TICKS;
+  activeDriver = 'term';
+  setNote('Longer term — your commission % decreases but you\'re offering the client a more manageable repayment.');
+  render();
+});
+
+slComm.addEventListener('input', () => {
+  // Commission slider: right = big deal (low comm%), left = small deal (high comm%)
+  const sliderR = slComm.value / TICKS;        // 0=left(high%), 1=right(low%)
+  const cr = 1 - sliderR;                       // commission ratio: 0=low%, 1=high%
+  const { rA, rT } = commRatioToAmtTerm(cr);
+  rAmt  = rA;
+  rTerm = rT;
+  activeDriver = 'comm';
+  if (rAmt < 0.999) {
+    setNote('Raising commission — amount increases first to match. Slide further right to also extend the term.');
+  } else {
+    setNote('Amount maxed out — now extending the term to match your commission target.');
+  }
+  render();
+});
+
+function setNote(t) {
+  document.getElementById('driver-note').textContent = t;
+}
+
+// ─────────────────────────────────────────────
+// Modal
+// ─────────────────────────────────────────────
+function openModal() {
+  document.getElementById('m-client').textContent = CUSTOMER;
+  document.getElementById('m-did').textContent    = DEAL_ID;
+  document.getElementById('overlay').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('overlay').classList.remove('show');
+}
+function onOverlayClick(e) {
+  if (e.target === document.getElementById('overlay')) closeModal();
+}
+function copyOffer() {
+  const lines = [
+    'OFFER SUMMARY',
+    '─────────────────────',
+    'Client:      ' + CUSTOMER,
+    'Deal ID:     ' + DEAL_ID,
+    'Funding:     ' + fmtAmt(currentAmt()),
+    'Term:        ' + currentTerm() + ' months',
+    'Commission:  ' + fmtComm(currentComm()) + '  (~' + fmtAmt(currentEarn()) + ')',
+    '─────────────────────',
+  ];
+  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => { btn.textContent = 'Copy Offer Summary'; }, 2500);
+  });
+}
+
+// ─────────────────────────────────────────────
+// Init
+// ─────────────────────────────────────────────
+document.getElementById('badge').textContent       = 'Deal #' + DEAL_ID;
+document.getElementById('hero-sub').textContent    = 'Pre-approved for ' + CUSTOMER + '. Slide to find the right fit.';
+document.getElementById('m-client').textContent    = CUSTOMER;
+document.getElementById('m-did').textContent       = DEAL_ID;
+document.getElementById('h-amt-min').textContent   = fmtAmt(MIN_AMT);
+document.getElementById('h-amt-max').textContent   = fmtAmt(MAX_AMT);
+document.getElementById('h-term-min').textContent  = MIN_TERM + ' months';
+document.getElementById('h-term-max').textContent  = MAX_TERM + ' months';
+document.getElementById('h-comm-max').textContent  = fmtComm(MAX_COMM) + ' · Max commission (smaller deal)';
+document.getElementById('h-comm-min').textContent  = fmtComm(MIN_COMM) + ' · Best for client (bigger deal)';
+
+render();
+</script>
+</body>
+</html>
