@@ -418,7 +418,7 @@
         <label>Amount slider step size</label>
         <div class="opt-grid g3">
           <label class="opt-card selected" onclick="selectOpt(this,'amtStep','1000')">
-            <input type="radio" name="amtStep" value="1000">
+            <input type="radio" name="amtStep" value="1000" checked>
             <div class="opt-title">$1,000</div>
             <div class="opt-desc">Fine control</div>
           </label>
@@ -471,7 +471,7 @@
         <label>Term slider step size</label>
         <div class="opt-grid g3">
           <label class="opt-card selected" onclick="selectOpt(this,'termStep','1')">
-            <input type="radio" name="termStep" value="1">
+            <input type="radio" name="termStep" value="1" checked>
             <div class="opt-title">1 month</div>
             <div class="opt-desc">Every month</div>
           </label>
@@ -520,7 +520,7 @@
         <label>How does commission relate to deal size?</label>
         <div class="opt-grid">
           <label class="opt-card selected" onclick="selectOpt(this,'commDir','inverse')">
-            <input type="radio" name="commDir" value="inverse">
+            <input type="radio" name="commDir" value="inverse" checked>
             <div class="opt-icon">📉</div>
             <div class="opt-title">Inverse (standard)</div>
             <div class="opt-desc">More $ for client → lower commission %. Longer term → lower commission %. Broker earns less % on bigger deals but more total $ on large deals.</div>
@@ -540,7 +540,7 @@
         <label>When broker drags the commission slider, what adjusts first?</label>
         <div class="opt-grid g3">
           <label class="opt-card selected" onclick="selectOpt(this,'commPri','amt_first')">
-            <input type="radio" name="commPri" value="amt_first">
+            <input type="radio" name="commPri" value="amt_first" checked>
             <div class="opt-icon">💰</div>
             <div class="opt-title">Amount first</div>
             <div class="opt-desc">Funding amount maxes out before term extends.</div>
@@ -582,7 +582,7 @@
         <label>Commission sensitivity curve</label>
         <div class="opt-grid g3">
           <label class="opt-card selected" onclick="selectOpt(this,'curve','linear')">
-            <input type="radio" name="curve" value="linear">
+            <input type="radio" name="curve" value="linear" checked>
             <div class="opt-title">Linear</div>
             <div class="opt-desc">Smooth, even change throughout the range.</div>
           </label>
@@ -723,8 +723,8 @@ function generateLink() {
   const url  = base + '?' + qs;
 
   document.getElementById('generated-url').textContent = url;
-  document.getElementById('link-box').style.display = '';
-  document.getElementById('link-box').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  document.getElementById('link-box').style.display = 'block';
+  document.getElementById('link-box').scrollIntoView({ behavior: 'smooth' });
 
   // Store in localStorage for tracking
   const deals = JSON.parse(localStorage.getItem('ds_deals') || '[]');
@@ -812,7 +812,7 @@ function checkForResponse() {
 
     // Show banner
     const banner = document.getElementById('new-response-banner');
-    banner.style.display = '';
+    banner.style.display = 'block';
     document.getElementById('nr-amt').textContent  = '$' + Math.round(r.amount).toLocaleString();
     document.getElementById('nr-term').textContent = r.term + ' months';
     document.getElementById('nr-comm').textContent = (+r.commPct).toFixed(1) + '% (~$' + Math.round(r.commDollars).toLocaleString() + ')';

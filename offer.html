@@ -640,7 +640,7 @@ function submitOffer() {
 
   // Show success screen
   el('modal-review').style.display  = 'none';
-  el('modal-success').style.display = '';
+  el('modal-success').style.display = 'block';
 
   // Build email
   const emailBody = buildEmailBody(response);
@@ -726,7 +726,7 @@ function init() {
   if (CFG.msg) {
     const banner = el('msg-banner');
     banner.textContent = decodeURIComponent(CFG.msg);
-    banner.style.display = '';
+    banner.style.display = 'block';
   }
 
   // Hero
